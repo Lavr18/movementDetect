@@ -1,2 +1,2 @@
 # movementDetect
-Movement detection and storage in EEPROM for Arduino
+Movement detection and storage in EEPROM for Arduino.
