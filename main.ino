@@ -29,65 +29,64 @@ void setup()
 // 
 //  // initialize the movement digital pin as an input:
 //  pinMode(movementPin, INPUT);
-//
-//   printTemp();
+
+  printTemp();
 
   // initialize a timer interrupt to give interrupts every 1 ms
-   TCCR0A|=(1<<WGM01);    //Set the CTC mode
-   OCR0A=0xF9;            //Set the value for 1ms
-   TIMSK0|=(1<<OCIE0A);   //Set the interrupt request
-   sei();                 //Enable interrupt
-   TCCR0B|=(1<<CS01);     //Set the prescale 1/64 clock
+   TCCR0A|=(1<<WGM01);    // set the CTC mode
+   OCR0A=0xF9;            // set the value for 1ms
+   TIMSK0|=(1<<OCIE0A);   // set the interrupt request
+   sei();                 // enable interrupt
+   TCCR0B|=(1<<CS01);     // set the prescale 1/64 clock
    TCCR0B|=(1<<CS00);
 }
 
 void loop() 
 {
-  // manage a timer to count seonds, numutes, hours, and days
-   if(timer >= 1000)
-   {
-    seconds++;
-    timer = 0;
-   }
-   if(seconds >= 60)
-   {
-    minutes++;
-    seconds = 0;
-   }
-   if(minutes >= 60)
-   {
-    hours++;
-    minutes = 0;
-   }
-   if(hours >= 60)
-   {
-    hours++;
-    minutes = 0;
-   }
-   
   // read the state of the movement value:
   movementState = digitalRead(movementPin);
-  
-/* Uncomment when reading data */
-//  Serial.println(timer);
-//  Serial.println(seconds);
-//  Serial.println(minutes);
 
   // check if the movement is detected. If it is, write the time to EEPROM:
-  if (movementState) 
+  if (movementState && minutes > 0) 
   {
     writeTemp(minutes);
     writeTemp(hours);
     writeTemp(days);
   }
+
+//  // clear the data in the EEPROM
+//  if(address < 70)
+//    writeTemp(255);
+
   
   delay(500);
 }
 
-// this is the interrupt request
+// Timer interrupt routine
 ISR(TIMER0_COMPA_vect)
 {    
   timer++;
+    
+ if(timer >= 1000)            // count seconds, minutes, hours, and days
+ {
+  seconds++;
+  timer = 0;
+ }
+ if(seconds >= 60)
+ {
+  minutes++;
+  seconds = 0;
+ }
+ if(minutes >= 60)
+ {
+  hours++;
+  minutes = 0;
+ }
+ if(hours >= 24)
+ {
+  days++;
+  hours = 0;
+ }
 }
 
 // print all EEPROM values to the serial monitor
