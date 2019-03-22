@@ -4,4 +4,4 @@
   Hardware used: Arduino Uno, HC-SR501 sensor.
 
 The setup, where Arduino Uno is run by a 9V battery. The motion sensor is on the bottom of an image.
-<img src="https://github.com/Lavr18/movementDetect/edit/master/setup.jpg" width="408" height = "325">
+<img src="https://github.com/Lavr18/movementDetect/blob/master/setup.jpg" width="408" height = "325">
